@@ -57,19 +57,6 @@ namespace GameFormatReader.Common
 			this.CurrentEndian = endian;
 		}
 
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		/// <param name="stream">The <see cref="Stream"/> to wrap within this EndianBinaryReader.</param>
-		/// <param name="encoding">The <see cref="Encoding"/> to use for characters.</param>
-		/// <param name="leaveOpen">Whether or not to leave the stream open after this EndianBinaryReader is disposed.</param>
-		/// <param name="endian">The <see cref="Endian"/> to use when reading from files.</param>
-		public EndianBinaryWriter(Stream stream, Encoding encoding, bool leaveOpen, Endian endian)
-			: base(stream, encoding, leaveOpen)
-		{
-			this.CurrentEndian = endian;
-		}
-
 		#endregion
 
 		#region Public Methods
