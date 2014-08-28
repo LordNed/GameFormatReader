@@ -45,6 +45,41 @@ namespace GameFormatReader.GCWii.Binaries.GC
 			}
 		}
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="data">byte[] containing a RARC archive file.</param>
+	    public RARC(byte[] data)
+	    {
+	        if (data == null)
+	            throw new ArgumentNullException("data", "data cannot be null");
+
+            using (EndianBinaryReader reader = new EndianBinaryReader(new MemoryStream(data), Endian.Big))
+            {
+                ReadHeader(reader);
+                ReadNodes(reader);
+            }
+	    }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="reader">EndianBinaryReader stream containing a RARC archive file.
+        /// Does not modify stream position.</param>
+	    public RARC(EndianBinaryReader reader)
+	    {
+	        if (reader == null)
+	            throw new ArgumentNullException("reader", "reader cannot be null.");
+
+	        long cachedStreamPos = reader.BaseStream.Position;
+	        reader.BaseStream.Seek(0x0, SeekOrigin.Begin);
+
+	        ReadHeader(reader);
+	        ReadNodes(reader);
+
+	        reader.BaseStream.Seek(cachedStreamPos, SeekOrigin.Begin);
+	    }
+
 		#endregion
 
 		#region Structs

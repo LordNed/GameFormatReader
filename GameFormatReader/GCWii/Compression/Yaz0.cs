@@ -117,14 +117,41 @@ namespace GameFormatReader.GCWii.Compression
 				byte[] magic = new byte[4];
 				fs.Read(magic, 0, 4);
 
-				if (magic[0] != 'Y' &&
-				    magic[1] != 'a' &&
-				    magic[2] != 'z' &&
-				    magic[3] != '0')
-					return false;
+			    return IsYaz0Compressed(magic);
 			}
-
-			return true;
 		}
+
+        /// <summary>
+        /// Checkes if a given file is Yaz0-compressed.
+        /// </summary>
+        /// <param name="stream">EndianBinaryReader stream to the file to check. Does not modify seek pos.</param>
+        /// <returns>true if the file is Yaz0-compressed; false otherwise.</returns>
+	    public static bool IsYaz0Compressed(EndianBinaryReader stream)
+	    {
+	        if (stream == null)
+	            throw new ArgumentNullException("stream", "stream cannot be null");
+
+	        byte[] magic = stream.ReadBytesAt(0x0, 4);
+	        return IsYaz0Compressed(magic);
+	    }
+
+        /// <summary>
+        /// Checkes if a given file is Yaz0-compressed.
+        /// </summary>
+        /// <param name="data">byte[] the file to check. Must be at least 4 bytes in length.</param>
+        /// <returns>true if the file is Yaz0-compressed; false otherwise.</returns>
+        public static bool IsYaz0Compressed(byte[] data)
+        {
+            if (data == null)
+                throw new ArgumentNullException("data", "data cannot be null.");
+
+            if (data.Length < 4)
+                throw new ArgumentOutOfRangeException("data", "data needs to be at least 4 bytes in length.");
+
+            return (data[0] == 'Y' &&
+                    data[1] == 'a' &&
+                    data[2] == 'z' &&
+                    data[3] == '0');
+        }
 	}
 }
