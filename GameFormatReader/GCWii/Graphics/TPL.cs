@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using GameFormatReader.Common;
-using GameFormatReader.GCWii.Enums;
+using GameFormatReader.GCWii.Graphics.Enums;
 
-namespace GameFormatReader.GCWii.Binaries.GC
+namespace GameFormatReader.GCWii.Graphics
 {
 	/// <summary>
 	/// Represents a custom format that stores
@@ -27,13 +27,20 @@ namespace GameFormatReader.GCWii.Binaries.GC
 		/// <param name="filepath">Path to the TPL file.</param>
 		public TPL(string filepath)
 		{
-			if (filepath == null)
-				throw new ArgumentNullException("filepath", "filepath cannot be null");
+			using (var reader = new EndianBinaryReader(File.OpenRead(filepath), Endian.Big))
+			{
+				ReadHeader(reader);
+				ReadTextures(reader);
+			}
+		}
 
-			if (!File.Exists(filepath))
-				throw new IOException(string.Format("File {0} does not exist", filepath));
-
-			using (EndianBinaryReader reader = new EndianBinaryReader(File.OpenRead(filepath), Endian.Big))
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="data">Byte array containing TPL data.</param>
+		public TPL(byte[] data)
+		{
+			using (var reader = new EndianBinaryReader(new MemoryStream(data), Endian.Big))
 			{
 				ReadHeader(reader);
 				ReadTextures(reader);
